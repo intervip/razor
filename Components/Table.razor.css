@@ -1,0 +1,18 @@
+﻿.table {
+	display: flex;
+	flex-direction: column;
+	align-self: stretch;
+}
+
+.table-header {
+	display: flex;
+	flex-direction: row;
+}
+
+h1 {
+	font-size: 24px;
+}
+
+table {
+	flex-grow: 1;
+}

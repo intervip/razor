@@ -1,0 +1,38 @@
+﻿.nav-menu-item {
+	margin: 0.1rem 0.6rem;
+	align-self: stretch;
+	flex-grow: 0;
+}
+
+.active {
+	background-color: #fff6;
+	box-shadow: 6px 6px 16px -6px #0009;
+}
+
+.nav-menu-item-icon {
+	margin: 0 1rem 0 0;
+}
+
+.nav-menu-item-text {
+	width: 6rem;
+	font-size: 14px;
+	white-space: nowrap;
+	margin: 0 2.4rem 0 0;
+	user-select: none;
+}
+
+.closed .nav-menu-item-icon {
+	animation: removeMargins 0.2s cubic-bezier(1, 0, 1, 1) forwards;
+}
+
+.closed .nav-menu-item-text {
+	animation: panelAnimation 0.2s cubic-bezier(1, 0, 1, 1) forwards;
+}
+
+.nav-menu-group-items .nav-menu-item-icon {
+	margin: 0 1rem;
+}
+
+.nav-menu-group-items .nav-menu-item-text {
+	animation: none;
+}

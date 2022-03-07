@@ -1,0 +1,54 @@
+﻿@using Microsoft.JSInterop
+
+@implements IAsyncDisposable
+@inject IJSRuntime JS
+
+<td id="@id">
+	@ChildContent
+</td>
+
+@code {
+	private string id = string.Empty;
+	private IJSObjectReference? module;
+
+	[Parameter]
+	public TextAlignAttribute? TextAlign { get; set; }
+
+	[Parameter]
+	public RenderFragment? ChildContent { get; set; }
+
+	protected override void OnInitialized()
+	{
+		id = Guid.NewGuid().ToString("n").Substring(0, 8);
+		base.OnInitialized();
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			// TODO: Don't load module if only defaults set
+			module = await JS.InvokeAsync<IJSObjectReference>("import", $"{Lib.RootPath}/Index.js");
+
+			switch (TextAlign)
+			{
+				case TextAlignAttribute.Left:
+					await module.InvokeVoidAsync("updateElementStyle", id, "textAlign", "left");
+					break;
+				case TextAlignAttribute.Right:
+					await module.InvokeVoidAsync("updateElementStyle", id, "textAlign", "right");
+					break;
+			}
+		}
+
+		await base.OnAfterRenderAsync(firstRender);
+	}
+
+	async ValueTask IAsyncDisposable.DisposeAsync()
+	{
+		if (module is not null)
+		{
+			await module.DisposeAsync();
+		}
+	}
+}

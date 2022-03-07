@@ -1,0 +1,72 @@
+﻿@using Microsoft.JSInterop
+
+@implements IAsyncDisposable
+@inject IJSRuntime JS
+
+<div class="nav-menu-group row">
+	<div class="nav-menu-group-content column">
+		<div class="nav-menu-group-header button row" @onclick="OpenGroupAsync">
+			<div class="nav-menu-group-icon column">
+				<EvaIcon Icon="@Icon"></EvaIcon>
+			</div>
+
+			<div class="nav-menu-group-text column">
+				@Text
+			</div>
+
+			<div class="nav-menu-group-chevron column">
+				<EvaIcon Icon="EvaIcons.Chevron"></EvaIcon>
+			</div>
+		</div>
+
+		<div class="nav-menu-group-items-container row">
+			<div id="@id" class="nav-menu-group-items column collapsed">
+				@ChildContent
+			</div>
+		</div>
+	</div>
+</div>
+
+@code {
+	private string id = string.Empty;
+	private IJSObjectReference? module;
+
+	[Parameter]
+	public string? Text { get; set; }
+
+	[Parameter]
+	public EvaIcons? Icon { get; set; }
+
+	[Parameter]
+	public RenderFragment? ChildContent { get; set; }
+
+	protected override void OnInitialized()
+	{
+		id = Guid.NewGuid().ToString("n").Substring(0, 8);
+		base.OnInitialized();
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			module = await JS.InvokeAsync<IJSObjectReference>("import", $"{Lib.ComponentsPath}/NavMenuGroup.razor.js");
+		}
+
+		await base.OnAfterRenderAsync(firstRender);
+	}
+
+	private async Task OpenGroupAsync()
+	{
+		ArgumentNullException.ThrowIfNull(module);
+		await module.InvokeVoidAsync("navMenuGroupChangeState", id);
+	}
+
+	async ValueTask IAsyncDisposable.DisposeAsync()
+	{
+		if (module is not null)
+		{
+			await module.DisposeAsync();
+		}
+	}
+}

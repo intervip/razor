@@ -1,0 +1,52 @@
+﻿@using Microsoft.JSInterop
+
+@implements IAsyncDisposable
+@inject IJSRuntime JS
+
+<div class="nav-menu column">
+	<div class="nav-menu-header row">
+		<div class="nav-menu-button button" @onclick="NavMenuButtonClicked">
+			<EvaIcon Icon="EvaIcons.Menu"></EvaIcon>
+		</div>
+	</div>
+	
+	<div class="nav-menu-content row">
+		<div class="nav-menu-items column">
+			@ChildContent
+		</div>
+	</div>
+
+	<div class="nav-menu-footer row">
+	</div>
+</div>
+
+@code {
+	private IJSObjectReference? module;
+
+	[Parameter]
+	public RenderFragment? ChildContent { get; set; }
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			module = await JS.InvokeAsync<IJSObjectReference>("import", $"{Lib.ComponentsPath}/NavMenu.razor.js");
+		}
+
+		await base.OnAfterRenderAsync(firstRender);
+	}
+
+	public async void NavMenuButtonClicked()
+	{
+		ArgumentNullException.ThrowIfNull(module);
+		await module.InvokeVoidAsync("navMenuChangeState", null);
+	}
+
+	async ValueTask IAsyncDisposable.DisposeAsync()
+	{
+		if (module is not null)
+		{
+			await module.DisposeAsync();
+		}
+	}
+}

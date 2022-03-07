@@ -1,0 +1,64 @@
+﻿<div class="search column" @onfocusout="FocusOut">
+	<div class="search-bar-content row">
+		<div class="search-bar column">
+			<input type="text" @bind="value" @oninput="InputValueChanged" spellcheck="false" placeholder="@Placeholder" />
+		</div>
+
+		<div class="search-button column">
+			<div class="search-button-icon row">
+				<EvaIcon Icon="EvaIcons.Search"></EvaIcon>
+			</div>
+		</div>
+	</div>
+	
+	<div class="search-bar-dropdown row">
+		<div class="dropdown-items">
+			@foreach(var item in items ?? Enumerable.Empty<KeyValuePair<int, string>>())
+			{
+				<div class="dropdown-item" @onmousedown="(async () => await SelectionChangedAsync(item))">@item.Value</div>
+			}
+		</div>
+	</div>
+</div>
+
+@code {
+	private IEnumerable<KeyValuePair<int, string>>? items = null;
+	private string? value = null;
+
+	[Parameter]
+	public string? Placeholder { get; set; }
+
+	[Parameter]
+	public int MaxItems { get; set; } = 25;
+
+	[Parameter]
+	public IDictionary<int, string>? Items { get; set; }
+
+	[Parameter]
+	public EventCallback<int> SelectionChangedEvent { get; set; }
+
+	private void InputValueChanged(ChangeEventArgs e)
+	{
+		items = null;
+
+		if (Items is not null && string.IsNullOrEmpty(e.Value?.ToString()) is false)
+		{
+			var text = e.Value?.ToString().Normalize(removeDiacritics: true) ?? string.Empty;
+			items = Items.Where(item => item.Value.Contains(text, StringComparison.InvariantCultureIgnoreCase)).Take(MaxItems);
+		}
+
+		StateHasChanged();
+	}
+
+	private async Task SelectionChangedAsync(KeyValuePair<int, string> item)
+	{
+		value = item.Value;
+		await SelectionChangedEvent.InvokeAsync(item.Key);
+	}
+
+	private void FocusOut()
+	{
+		items = null;
+		StateHasChanged();
+	}
+}
