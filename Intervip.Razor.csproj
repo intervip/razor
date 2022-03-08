@@ -2,10 +2,38 @@
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
+		<LangVersion>preview</LangVersion>
 		<Nullable>enable</Nullable>
+	</PropertyGroup>
+	
+	<PropertyGroup>
+		<Description>A set of razor components that define the UI of the Intervip Intranet</Description>
+		<RepositoryUrl>https://github.com/intervip/razor</RepositoryUrl>
+		<PackageTags>intervip;razor;blazor;ui;components</PackageTags>
+		<Copyright>Copyright © 2022 - Intervip Telecom</Copyright>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageIcon>Assets\icon.png</PackageIcon>
+		<Authors>Intervip Telecom</Authors>
+		<Version>1.0.0</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
+		<SupportedPlatform Include="browser" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="Assets\icon.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		
+		<None Update="README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
 	</ItemGroup>
 </Project>
