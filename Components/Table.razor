@@ -1,10 +1,14 @@
-﻿<div class="table">
-	<div class="table-header">
+﻿<div class="table column">
+	<div class="table-header row">
 	</div>
-
-	<table>
-		@ChildContent
-	</table>
+	
+	<div class="table-content row">
+		<div class="scrollable-table">
+			<div class="table-rows">
+				@ChildContent
+			</div>
+		</div>
+	</div>
 </div>
 
 @code {

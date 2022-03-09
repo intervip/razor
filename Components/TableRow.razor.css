@@ -1,4 +1,4 @@
-﻿tr {
+﻿.table-row {
 	display: flex;
 	align-self: stretch;
 	padding: 0.6rem;
@@ -9,6 +9,6 @@
 	cursor: pointer;
 }
 
-	tr:hover {
+	.table-row:hover {
 		background-color: #fff7;
 	}
