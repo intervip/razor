@@ -1,17 +1,40 @@
-﻿<div class="table column">
-	<div class="table-header row">
-	</div>
+﻿@typeparam TItem
 
-	<div class="table-content row">
-		<div class="scrollable-table">
-			<div class="table-rows">
-				@ChildContent
-			</div>
-		</div>
-	</div>
+<CascadingValue IsFixed="true" Value="this">@ChildContent</CascadingValue>
+
+<div class="table-container column">
+	<table class="row">
+		<tbody class="table-rows">
+			@if (ChildContent is not null)
+			{
+				foreach (var item in Items ?? Enumerable.Empty<TItem>())
+				{
+					<tr @key="item.GetHashCode()" class="table-row">
+								
+						@foreach (var column in columns)
+						{
+							<td class="table-data column">
+								@column.GetCellValue(item)
+							</td>
+						}
+					</tr>
+				}
+			}
+		</tbody>
+	</table>
 </div>
 
 @code {
+	private List<TableColumn<TItem>> columns = new List<TableColumn<TItem>>();
+
 	[Parameter]
 	public RenderFragment? ChildContent { get; set; }
+
+	[Parameter]
+	public IEnumerable<TItem>? Items { get; set; }
+
+	internal void AddTableRow(TableColumn<TItem> column)
+	{
+		columns.Add(column);
+	}
 }

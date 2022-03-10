@@ -20,7 +20,8 @@ html, body, #app {
 	flex-direction: column;
 }
 
-.row {
+.row,
+[class$="row"] {
 	display: flex;
 	flex-direction: row;
 	flex-grow: 1;
