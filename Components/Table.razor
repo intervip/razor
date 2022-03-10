@@ -9,7 +9,7 @@
 			{
 				foreach (var item in Items ?? Enumerable.Empty<TItem>())
 				{
-					<tr @key="item.GetHashCode()" class="table-row">
+					<tr @key="item.GetHashCode()" class="table-row" @onclick="(async () => await ItemClickedAsync(item))">
 								
 						@foreach (var column in columns)
 						{
@@ -33,8 +33,16 @@
 	[Parameter]
 	public IEnumerable<TItem>? Items { get; set; }
 
+	[Parameter]
+	public EventCallback ItemClicked { get; set; }
+
 	internal void AddTableRow(TableColumn<TItem> column)
 	{
 		columns.Add(column);
+	}
+
+	private async Task ItemClickedAsync(TItem item)
+	{
+		await ItemClicked.InvokeAsync(item);
 	}
 }
