@@ -1,0 +1,39 @@
+﻿@typeparam TValue
+
+<div class="text-box-container column">
+	<div class="text-box-label row">
+		<label>@Title</label>
+	</div>
+
+	<div class="text-box row">
+		<input type="@type" @bind="Value" placeholder="@Placeholder" />
+	</div>
+</div>
+
+@code {
+	private string? type;
+
+	[Parameter]
+	public string? Placeholder { get; set; }
+
+	[Parameter]
+	public string? Title { get; set; }
+
+	[Parameter]
+	public TValue? Value { get; set; }
+
+	protected override void OnParametersSet()
+	{
+		if (Value is int)
+		{
+			type = "number";
+		}
+
+		else
+		{
+			type = "text";
+		}
+
+		base.OnParametersSet();
+	}
+}
