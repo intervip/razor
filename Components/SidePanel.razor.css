@@ -1,11 +1,8 @@
 ﻿.side-panel {
 	position: absolute;
 	width: 16rem;
-	height: 100%;
+	height: calc(100% - 3.2rem);
 	right: 0;
-}
-
-.side-panel-container {
 	padding: 1.6rem;
 	background: transparent;
 	backdrop-filter: blur(1.6rem);
