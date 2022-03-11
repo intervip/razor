@@ -1,0 +1,26 @@
+﻿<div class="side-panel column@(IsPanelOpen ? string.Empty : " collapsed")">
+	<div class="side-panel-container row">
+		@ChildContent
+	</div>
+</div>
+
+@code {
+	[Parameter]
+	public RenderFragment? ChildContent { get; set; }
+	public bool IsPanelOpen { get; private set; }
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		await base.OnAfterRenderAsync(firstRender);
+	}
+
+	public void OpenPanel()
+	{
+		IsPanelOpen = true;
+	}
+
+	private void ClosePanel()
+	{
+		IsPanelOpen = false;
+	}
+}
