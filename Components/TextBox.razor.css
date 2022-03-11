@@ -1,0 +1,22 @@
+﻿.text-box-container {
+	margin: 0.8rem 0;
+}
+
+.text-box {
+	border-radius: 0.4rem;
+	background-color: #fff5;
+	box-shadow: 6px 6px 16px -12px #0009;
+}
+
+input {
+	flex-grow: 1;
+	height: 1.2rem;
+	border-width: 0;
+	padding: 0.6rem;
+	font-size: 14px;
+	background-color: transparent;
+}
+
+	input:focus {
+		outline: 0;
+	}

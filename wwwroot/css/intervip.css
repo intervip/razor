@@ -15,6 +15,30 @@ html, body, #app {
 	margin: 0;
 }
 
+p {
+	margin: 0;
+}
+
+h1 {
+	font-size: 32px;
+	padding: 0 0 1.6rem 0;
+	font-weight: lighter;
+	margin: 0;
+	user-select: none;
+}
+
+h2 {
+	font-size: 24px;
+	padding: 0 0 1.6rem 0;
+	font-weight: lighter;
+	margin: 0;
+	user-select: none;
+}
+
+label {
+	font-size: 14px;
+}
+
 .column {
 	display: flex;
 	flex-direction: column;
@@ -25,16 +49,6 @@ html, body, #app {
 	display: flex;
 	flex-direction: row;
 	flex-grow: 1;
-}
-
-.align-left {
-	align-items: flex-start;
-	justify-content: inherit;
-}
-
-.align-right {
-	align-items: flex-end;
-	justify-content: flex-end;
 }
 
 .button {
