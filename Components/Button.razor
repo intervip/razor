@@ -1,0 +1,11 @@
+﻿<div class="button-container column">
+	<button @onclick="@(args => ButtonClickedEvent.InvokeAsync(args))">@Text</button>
+</div>
+
+@code {
+	[Parameter]
+	public string? Text { get; set; }
+
+	[Parameter]
+	public EventCallback<MouseEventArgs> ButtonClickedEvent { get; set; }
+}
