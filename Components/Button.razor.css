@@ -1,0 +1,20 @@
+﻿.button-container {
+	margin: 0.8rem 0;
+	border-radius: 0.4rem;
+	padding: 0.6rem 1.2rem;
+	background-color: #fff5;
+	box-shadow: 6px 6px 16px -12px #0009;
+}
+
+	.button-container:hover {
+		background-color: #fff3;
+	}
+
+	.button-container:active {
+		background-color: #fff5;
+	}
+
+button {
+	border: 0;
+	background-color: transparent;
+}
