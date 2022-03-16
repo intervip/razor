@@ -1,39 +1,57 @@
-﻿@typeparam TValue
+﻿@using Microsoft.AspNetCore.Components.Forms;
+@using System.Diagnostics.CodeAnalysis
+
+@typeparam TValue
+@inherits InputBase<TValue>
 
 <div class="text-box-container column">
 	<div class="text-box-label row">
-		<label>@Title</label>
+		<label>@Label</label>
 	</div>
 
 	<div class="text-box row">
-		<input type="@type" @bind="Value" placeholder="@Placeholder" />
+		<input @bind="CurrentValueAsString" @bind:event="oninput" placeholder="@Placeholder" />
 	</div>
 </div>
 
 @code {
-	private string? type;
-
 	[Parameter]
 	public string? Placeholder { get; set; }
 
 	[Parameter]
-	public string? Title { get; set; }
+	public string? Label { get; set; }
 
-	[Parameter]
-	public TValue? Value { get; set; }
-
-	protected override void OnParametersSet()
+	protected override bool TryParseValueFromString(
+		string? value,
+		out TValue? result,
+		[NotNullWhen(false)] out string? validationErrorMessage)
 	{
-		if (Value is int)
+		if (string.IsNullOrEmpty(value))
 		{
-			type = "number";
+			result = default(TValue);
+			validationErrorMessage = null;
+			return true;
 		}
 
-		else
+		if (typeof(TValue) == typeof(string))
 		{
-			type = "text";
+			result = (TValue)(object)value;
+			validationErrorMessage = null;
+			return true;
 		}
 
-		base.OnParametersSet();
+		if (typeof(TValue) == typeof(int) || typeof(TValue) == typeof(int?))
+		{
+			if (int.TryParse(value, out var resultInt))
+			{
+				result = (TValue)(object)resultInt;
+				validationErrorMessage = null;
+				return true;
+			}
+		}
+
+		validationErrorMessage = $"Could not parse from type string to {typeof(TValue)}";
+		result = default(TValue);
+		return false;
 	}
 }
