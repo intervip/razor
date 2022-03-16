@@ -1,0 +1,76 @@
+﻿@using System.Linq.Expressions
+@typeparam TItem
+
+<div tabindex="0" class="dropdown-container column" @onfocusout="DropdownFocusOutEventHandler">
+	<div class="text-box-label row">
+		<label>@Label</label>
+	</div>
+
+	<div class="dropdown column">
+		<div class="dropdown-button row" @onclick="DropdownButtonClickedEventHandler">
+			@Placeholder
+		</div>
+
+		<div class="dropdown-content row@(isOpen ? "" : " closed")">
+			<div class="dropdown-items">
+				@foreach (var item in Items ?? Enumerable.Empty<TItem>())
+				{
+					<div @key="item.GetHashCode()" class="dropdown-item" @onclick="@(async () => await DropdownItemClickedEventHandler(item))">@compiledExpression(item)</div>
+				}
+			</div>
+		</div>
+	</div>
+</div>
+
+@code {
+	private Func<TItem, object> compiledExpression = null!;
+	private bool isOpen = false;
+
+	[Parameter]
+	public string? Label { get; set; }
+
+	[Parameter]
+	public string? Placeholder { get; set; }
+
+	[Parameter]
+	public TItem? Value { get; set; }
+
+	[Parameter]
+	public IEnumerable<TItem>? Items { get; set; }
+
+	[Parameter]
+	public EventCallback<TItem> ValueChanged { get; set; }
+
+	[Parameter, EditorRequired]
+	public Expression<Func<TItem, object>>? Expression { get; set; }
+
+	protected override void OnParametersSet()
+	{
+		ArgumentNullException.ThrowIfNull(Expression);
+		compiledExpression = Expression.Compile();
+
+		if (Value is not null)
+		{
+			Placeholder = compiledExpression(Value).ToString();
+		}
+
+		base.OnParametersSet();
+	}
+
+	private void DropdownButtonClickedEventHandler()
+	{
+		isOpen = true;
+	}
+
+	private void DropdownFocusOutEventHandler()
+	{
+		isOpen = false;
+	}
+
+	private async Task DropdownItemClickedEventHandler(TItem item)
+	{
+		isOpen = false;
+		await ValueChanged.InvokeAsync(item);
+		Placeholder = compiledExpression(item).ToString();
+	}
+}
