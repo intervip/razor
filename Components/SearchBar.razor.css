@@ -39,7 +39,7 @@ input {
 
 .dropdown-items {
 	flex-grow: 1;
-	overflow: scroll;
+	overflow-y: auto;
 	max-height: 14rem;
 }
 
