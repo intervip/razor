@@ -5,7 +5,7 @@
 table {
 	height: 0;
 	padding: 1.6rem;
-	overflow: scroll;
+	overflow-y: auto;
 }
 
 .table-rows {
