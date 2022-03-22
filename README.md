@@ -2,6 +2,10 @@
 
 The official razor components library used at https://intranet.intervip.com.br.
 
+| Nightly Build |
+|:-------------:|
+| [![Build Status](https://dev.azure.com/BrunoBlanes/Intervip%20Razor/_apis/build/status/Nightly%20Release%20Build?branchName=main)](https://dev.azure.com/BrunoBlanes/Intervip%20Razor/_build/latest?definitionId=18&branchName=main) |
+
 ## Getting started
 * Add a reference to the package at your project's `_Imports.razor` file:
 ```razor
