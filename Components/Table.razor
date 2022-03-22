@@ -9,7 +9,7 @@
 			{
 				foreach (var item in Items ?? Enumerable.Empty<TItem>())
 				{
-					<tr @key="item.GetHashCode()" class="table-row" @onclick="(async () => await ItemClickedAsync(item))">
+					<tr @key="item.GetHashCode()" class="table-row" @onclick:stopPropagation="true" @onclick="(async () => await ItemClickedAsync(item))">
 								
 						@foreach (var column in columns)
 						{
