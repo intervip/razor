@@ -1,17 +1,21 @@
 ﻿.sidepanel-container {
-	background: transparent;
-	position: fixed;
+	box-shadow: -6px 0px 24px -4px #0009;
+	backdrop-filter: blur(1.6rem);
+	position: absolute;
+	padding: 0 1.6rem;
+	width: 16rem;
 	height: 100%;
 	right: 0;
 }
 
-.sidepanel-content {
-	width: 16rem;
-	padding: 0.8rem 1.6rem;
-	backdrop-filter: blur(1.6rem);
-	box-shadow: -6px 0px 24px -4px #0009;
+.sidepanel-title {
+	flex-grow: unset;
+	font-size: 1.6rem;
+	align-self: center;
+	font-weight: lighter;
+	margin: 1.6rem 0 0 0;
 }
 
-.collapsed {
-	display: none;
+.sidepanel-content {
+	margin: 1.6rem 0;
 }

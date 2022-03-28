@@ -1,5 +1,9 @@
-﻿<div class="sidepanel-container row@(isOpen ? string.Empty : " collapsed")" @onclick:stopPropagation="true">
-	<div class="sidepanel-content column">
+﻿<div class="sidepanel-container column" @onclick:stopPropagation="true" hidden="@(!isOpen)">
+	<div class="sidepanel-title row">
+		@Title
+	</div>
+
+	<div class="sidepanel-content row">
 		@ChildContent
 	</div>
 </div>
@@ -9,6 +13,9 @@
 
 	[Parameter]
 	public RenderFragment? ChildContent { get; set; }
+
+	[Parameter]
+	public string? Title { get; set; }
 
 	public void OpenPanel()
 	{
