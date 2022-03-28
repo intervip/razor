@@ -8,10 +8,23 @@
 
 	<div class="dropdown column">
 		<div class="dropdown-button row" @onclick="DropdownButtonClickedEventHandler">
-			@Placeholder
+			@if (Value is not null && compiledExpression(Value) is object compiledValue)
+			{
+				var placeHolder = compiledValue.ToString();
+
+				if (string.IsNullOrEmpty(placeHolder) is not true)
+				{
+					<p>@placeHolder</p>
+				}
+
+				else
+				{
+					<p class="dropdown-button-placeholder">@Placeholder</p>
+				}
+			}
 		</div>
 
-		<div class="dropdown-content row@(isOpen ? "" : " closed")">
+		<div class="dropdown-content row" hidden="@(!isOpen)">
 			<div class="dropdown-items">
 				@foreach (var item in Items ?? Enumerable.Empty<TItem>())
 				{
@@ -48,12 +61,6 @@
 	{
 		ArgumentNullException.ThrowIfNull(Expression);
 		compiledExpression = Expression.Compile();
-
-		if (Value is not null)
-		{
-			Placeholder = compiledExpression(Value).ToString();
-		}
-
 		base.OnParametersSet();
 	}
 

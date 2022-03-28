@@ -15,6 +15,10 @@
 	box-shadow: 6px 6px 16px -12px #0009;
 }
 
+.dropdown-button-placeholder {
+	color: #0007;
+}
+
 .dropdown-content {
 	border-radius: 0.4rem;
 	box-shadow: 6px 6px 16px -12px #0009;
@@ -42,7 +46,3 @@
 	.dropdown-item:active {
 		background-color: #fff9;
 	}
-
-.closed {
-	height: 0;
-}
