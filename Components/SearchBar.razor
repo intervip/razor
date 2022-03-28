@@ -1,4 +1,7 @@
-﻿<div class="search column" @onfocusout="FocusOut">
+﻿@using System.Linq.Expressions
+@typeparam TItem
+
+<div class="search column" @onfocusout="FocusOut">
 	<div class="search-bar-content row">
 		<div class="search-bar column">
 			<input type="text" @bind="value" @oninput="InputValueChanged" spellcheck="false" placeholder="@Placeholder" />
@@ -13,16 +16,17 @@
 	
 	<div class="search-bar-dropdown row">
 		<div class="dropdown-items">
-			@foreach(var item in items ?? Enumerable.Empty<KeyValuePair<int, string>>())
+			@foreach(var item in items ?? Enumerable.Empty<TItem>())
 			{
-				<div class="dropdown-item" @onmousedown="(async () => await SelectionChangedAsync(item))">@item.Value</div>
+				<div class="dropdown-item" @onmousedown="(async () => await SelectionChangedAsync(item))">@compiledExpression(item)</div>
 			}
 		</div>
 	</div>
 </div>
 
 @code {
-	private IEnumerable<KeyValuePair<int, string>>? items = null;
+	private Func<TItem, string> compiledExpression = null!;
+	private IEnumerable<TItem>? items = null;
 	private string? value = null;
 
 	[Parameter]
@@ -32,10 +36,20 @@
 	public int MaxItems { get; set; } = 25;
 
 	[Parameter]
-	public IDictionary<int, string>? Items { get; set; }
+	public IEnumerable<TItem>? Items { get; set; }
+
+	[Parameter, EditorRequired]
+	public Expression<Func<TItem, string>>? Expression { get; set; }
 
 	[Parameter]
-	public EventCallback<int> SelectionChangedEvent { get; set; }
+	public EventCallback SelectionChangedEvent { get; set; }
+
+	protected override void OnParametersSet()
+	{
+		ArgumentNullException.ThrowIfNull(Expression);
+		compiledExpression = Expression.Compile();
+		base.OnParametersSet();
+	}
 
 	private void InputValueChanged(ChangeEventArgs e)
 	{
@@ -44,16 +58,16 @@
 		if (Items is not null && string.IsNullOrEmpty(e.Value?.ToString()) is false)
 		{
 			var text = e.Value?.ToString().Normalize(removeDiacritics: true) ?? string.Empty;
-			items = Items.Where(item => item.Value.Contains(text, StringComparison.InvariantCultureIgnoreCase)).Take(MaxItems);
+			items = Items.Where(item => compiledExpression(item).Contains(text, StringComparison.InvariantCultureIgnoreCase)).Take(MaxItems);
 		}
 
 		StateHasChanged();
 	}
 
-	private async Task SelectionChangedAsync(KeyValuePair<int, string> item)
+	private async Task SelectionChangedAsync(TItem item)
 	{
-		value = item.Value;
-		await SelectionChangedEvent.InvokeAsync(item.Key);
+		value = compiledExpression(item);
+		await SelectionChangedEvent.InvokeAsync(item);
 	}
 
 	private void FocusOut()
