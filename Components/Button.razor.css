@@ -14,12 +14,12 @@ button {
 	border-radius: 0.4rem;
 	padding: 0.6rem 1.2rem;
 	background-color: #fff5;
-	box-shadow: 6px 6px 16px -12px #0009;
+	box-shadow: 6px 6px 16px -8px #0009;
 }
 
 	button:hover {
 		background-color: #fff7;
-		box-shadow: 6px 6px 16px -8px #0009;
+		box-shadow: 6px 6px 16px -6px #0009;
 	}
 
 	button:active {
@@ -33,6 +33,7 @@ button {
 }
 
 [disabled] {
+	color: #0009;
 	cursor: unset;
 	box-shadow: none;
 }

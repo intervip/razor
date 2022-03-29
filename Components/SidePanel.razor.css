@@ -1,21 +1,29 @@
 ﻿.sidepanel-container {
-	box-shadow: -6px 0px 24px -4px #0009;
-	backdrop-filter: blur(1.6rem);
-	position: absolute;
-	padding: 0 1.6rem;
-	width: 16rem;
-	height: 100%;
 	right: 0;
+	height: 100%;
+	width: 18rem;
+	position: absolute;
 }
+
+	.sidepanel-container::before {
+		content: '';
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		backdrop-filter: blur(1.6rem);
+		box-shadow: -6px 0px 24px -4px #0009;
+	}
 
 .sidepanel-title {
 	flex-grow: unset;
 	font-size: 1.6rem;
+	position: relative;
 	align-self: center;
 	font-weight: lighter;
 	margin: 1.6rem 0 0 0;
 }
 
 .sidepanel-content {
-	margin: 1.6rem 0;
+	margin: 1.6rem;
+	position: relative;
 }

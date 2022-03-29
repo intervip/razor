@@ -1,31 +1,29 @@
 ﻿@using System.Linq.Expressions
 @typeparam TItem
 
-<div class="search column" @onfocusout="FocusOut">
-	<div class="search-bar-content row">
-		<div class="search-bar column">
+<div class="searchbar-container column" @onfocusout="FocusOut">
+	<div class="searchbar row">
+		<div class="searchbar-input column">
 			<input type="text" @bind="value" @oninput="InputValueChanged" spellcheck="false" placeholder="@Placeholder" />
 		</div>
 
-		<div class="search-button column">
-			<div class="search-button-icon row">
-				<EvaIcon Icon="EvaIcons.Search"></EvaIcon>
-			</div>
+		<div class="searchbar-icon column">
+			<EvaIcon Icon="EvaIcons.Search"></EvaIcon>
 		</div>
 	</div>
 	
-	<div class="search-bar-dropdown row">
+	<div class="dropdown row">
 		<div class="dropdown-items">
 			@foreach(var item in items ?? Enumerable.Empty<TItem>())
 			{
-				<div class="dropdown-item" @onmousedown="(async () => await SelectionChangedAsync(item))">@compiledExpression(item)</div>
+				<div class="dropdown-item row" @onmousedown="(async () => await SelectionChangedAsync(item))">@compiledExpression(item)</div>
 			}
 		</div>
 	</div>
 </div>
 
 @code {
-	private Func<TItem, string> compiledExpression = null!;
+	private Func<TItem, object> compiledExpression = null!;
 	private IEnumerable<TItem>? items = null;
 	private string? value = null;
 
@@ -39,7 +37,7 @@
 	public IEnumerable<TItem>? Items { get; set; }
 
 	[Parameter, EditorRequired]
-	public Expression<Func<TItem, string>>? Expression { get; set; }
+	public Expression<Func<TItem, object>>? Expression { get; set; }
 
 	[Parameter]
 	public EventCallback SelectionChangedEvent { get; set; }
@@ -58,7 +56,9 @@
 		if (Items is not null && string.IsNullOrEmpty(e.Value?.ToString()) is false)
 		{
 			var text = e.Value?.ToString().Normalize(removeDiacritics: true) ?? string.Empty;
-			items = Items.Where(item => compiledExpression(item).Contains(text, StringComparison.InvariantCultureIgnoreCase)).Take(MaxItems);
+			items = Items.Where(item => compiledExpression(item).ToString()
+				?.Contains(text, StringComparison.InvariantCultureIgnoreCase) ?? false)
+				.Take(MaxItems);
 		}
 
 		StateHasChanged();
@@ -66,7 +66,7 @@
 
 	private async Task SelectionChangedAsync(TItem item)
 	{
-		value = compiledExpression(item);
+		value = compiledExpression(item).ToString();
 		await SelectionChangedEvent.InvokeAsync(item);
 	}
 

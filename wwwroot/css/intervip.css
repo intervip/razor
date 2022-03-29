@@ -102,3 +102,34 @@ label {
 		margin: 0;
 	}
 }
+
+/* Dropdown list */
+.dropdown-items {
+	width: 100%;
+	flex-grow: 1;
+	overflow-y: auto;
+	max-height: 12rem;
+	position: absolute;
+	border-radius: 0.4rem;
+	background-color: #fff7;
+	backdrop-filter: blur(0.6rem);
+	box-shadow: 6px 6px 16px -8px #0009;
+}
+
+.dropdown-item {
+	margin: 0.3rem;
+	cursor: pointer;
+	font-size: 14px;
+	padding: 0 0.6rem;
+	min-height: 2.2rem;
+	align-items: center;
+	border-radius: 0.4rem;
+}
+
+	.dropdown-item:hover {
+		background-color: #fff7;
+	}
+
+	.dropdown-item:active {
+		background-color: #fff9;
+	}
