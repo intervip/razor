@@ -16,7 +16,9 @@
 		<div class="dropdown-items">
 			@foreach(var item in items ?? Enumerable.Empty<TItem>())
 			{
-				<div class="dropdown-item row" @onmousedown="(async () => await SelectionChangedAsync(item))">@compiledExpression(item)</div>
+				<div class="dropdown-item row" @onmousedown="(async () => await SelectionChangedAsync(item))">
+					@compiledExpression(item)
+				</div>
 			}
 		</div>
 	</div>
