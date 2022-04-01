@@ -1,0 +1,15 @@
+﻿<div class="progressring-container row@(Fadeout ?? false ? " fadeout" : "")" hidden="@Hidden" @onclick:stopPropagation="true">
+	<div class="progressring column">
+		<svg viewBox="0 0 200 200">
+			<circle cx="70" cy="70" r="70"></circle>
+		</svg>
+	</div>
+</div>
+
+@code {
+	[Parameter]
+	public bool? Hidden { get; set; }
+
+	[Parameter]
+	public bool? Fadeout { get; set; }
+}
