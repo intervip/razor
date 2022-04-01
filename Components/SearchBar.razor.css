@@ -4,17 +4,16 @@
 	position: absolute;
 	border-radius: 0.4rem;
 	background-color: #fff5;
-	box-shadow: 6px 6px 16px -12px #0009;
+	box-shadow: 6px 6px 16px -8px #0009;
 }
 
-.searchbar {
-	border-radius: 0.4rem;
-	box-shadow: 6px 6px 16px -12px #0009;
-}
+	.searchbar-container:hover {
+		background-color: #fff7;
+		box-shadow: 6px 6px 16px -6px #0009;
+	}
 
-	.searchbar:hover {
-		background-color: #fff6;
-		box-shadow: 6px 6px 16px -8px #0009;
+	.searchbar-container:focus {
+		background-color: #fff9;
 	}
 
 .searchbar-input {
@@ -32,8 +31,10 @@ input {
 	padding: 0.6rem;
 	font-size: 14px;
 	background-color: transparent;
+	border-radius: 0.4rem 0 0 0.4rem;
 }
 
 	input:focus {
 		outline: 0;
+		background-color: #fff9;
 	}

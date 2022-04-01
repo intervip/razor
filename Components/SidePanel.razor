@@ -1,11 +1,5 @@
 ﻿<div class="sidepanel-container column" @onclick:stopPropagation="true" hidden="@(!isOpen)">
-	<div class="sidepanel-title row">
-		@Title
-	</div>
-
-	<div class="sidepanel-content row">
-		@ChildContent
-	</div>
+	@ChildContent
 </div>
 
 @code {
@@ -13,9 +7,6 @@
 
 	[Parameter]
 	public RenderFragment? ChildContent { get; set; }
-
-	[Parameter]
-	public string? Title { get; set; }
 
 	public void OpenPanel()
 	{
