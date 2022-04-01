@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Intervip.Razor.StyleAttributes;
+
+using Microsoft.AspNetCore.Components;
 
 using System.Linq.Expressions;
 
@@ -10,6 +12,9 @@ public partial class TableColumn<TItem> : ComponentBase
 
 	[CascadingParameter]
 	public Table<TItem>? ParentTable { get; set; }
+
+	[Parameter]
+	public CSSAlignItems? AlignItems { get; set; }
 
 	[Parameter, EditorRequired]
 	public Expression<Func<TItem, object>?>? Expression { get; set; }

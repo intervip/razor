@@ -4,12 +4,12 @@
 
 table {
 	height: 0;
-	padding: 1.6rem;
-	overflow-y: auto;
 }
 
 .table-rows {
-	flex-grow: 1;
+	display: table-row-group;
+	padding: 0 1.6rem;
+	overflow-y: auto;
 }
 
 .table-row {
@@ -17,16 +17,39 @@ table {
 	margin: 0.8rem 0;
 	border-radius: 0.4rem;
 	background-color: #fff5;
-	box-shadow: 6px 6px 16px -12px #0009;
+	box-shadow: 6px 6px 16px -8px #0009;
 	cursor: pointer;
 }
 
 	.table-row:hover {
 		background-color: #fff7;
+		box-shadow: 6px 6px 16px -6px #0009;
+	}
+
+	.table-row:active {
+		background-color: #fff4;
+		box-shadow: inset -6px -6px 16px -12px #0009;
 	}
 
 .table-data {
+	width: 100%;
 	flex-grow: 1;
-	align-items: center;
 	user-select: none;
+	align-items: center;
+}
+
+.left {
+	align-items: flex-start;
+}
+
+.right {
+	align-items: flex-end;
+}
+
+.first {
+	margin: 1.6rem 0 0.4rem 0;
+}
+
+.last {
+	margin: 0.4rem 0 1.6rem 0;
 }

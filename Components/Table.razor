@@ -5,15 +5,26 @@
 <div class="table-container column">
 	<table class="row">
 		<tbody class="table-rows">
-			@if (ChildContent is not null)
+			@if (ChildContent is not null && Items?.Count > 0)
 			{
-				foreach (var item in Items ?? Enumerable.Empty<TItem>())
+				foreach (var item in Items)
 				{
-					<tr @key="item.GetHashCode()" class="table-row" @onclick:stopPropagation="true" @onclick="(async () => await ItemClickedAsync(item))">
-								
+					var cssClass = "table-row";
+
+					switch (Items.IndexOf(item))
+					{
+						case var index when index == 0:
+							cssClass += " first";
+							break;
+						case var index when index == Items.Count - 1:
+							cssClass += " last";
+							break;
+					}
+
+					<tr @key="item.GetHashCode()" class="@cssClass" @onclick:stopPropagation="true" @onclick="(async () => await ItemClickedAsync(item))">
 						@foreach (var column in columns)
 						{
-							<td class="table-data column">
+							<td class="@($"table-data column {column.AlignItems.ToString()?.ToLower()}".Trim())">
 								@column.GetCellValue(item)
 							</td>
 						}
@@ -31,7 +42,7 @@
 	public RenderFragment? ChildContent { get; set; }
 
 	[Parameter]
-	public IEnumerable<TItem>? Items { get; set; }
+	public IList<TItem>? Items { get; set; }
 
 	[Parameter]
 	public EventCallback ItemClicked { get; set; }
