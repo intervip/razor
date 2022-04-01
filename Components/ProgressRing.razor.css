@@ -1,0 +1,51 @@
+﻿.progressring-container {
+	z-index: 1;
+	width: 100%;
+	height: 100%;
+	user-select: none;
+	position: absolute;
+}
+
+.fadeout {
+	background: #ccc9;
+}
+
+.progressring {
+	flex-grow: 1;
+	align-self: center;
+	align-items: center;
+}
+
+svg {
+	max-width: 3.2rem;
+	animation: spin 1.6s linear infinite;
+}
+
+circle {
+	fill: none;
+	stroke: #000;
+	stroke-width: 10;
+	stroke-dasharray: 440;
+	stroke-linecap: round;
+	stroke-dashoffset: 440;
+	transform-origin: center;
+	transform: translate(30px, 30px);
+	animation: animate 1.8s cubic-bezier(.8, 0, .2, 1) infinite;
+	
+}
+
+@keyframes spin {
+	50% {
+		transform: rotate(180deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes animate {
+	50% {
+		stroke-dashoffset: 0;
+	}
+}
