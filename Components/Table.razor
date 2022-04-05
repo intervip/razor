@@ -1,35 +1,33 @@
-﻿@typeparam TItem
+﻿@using Microsoft.AspNetCore.Components.Web.Virtualization
+@typeparam TItem
 
 <CascadingValue IsFixed="true" Value="this">@ChildContent</CascadingValue>
 
 <div class="table-container column">
 	<table class="row">
-		<tbody class="table-rows">
+		<tbody class="table-rows" tabindex="-1">
 			@if (ChildContent is not null && Items?.Count > 0)
 			{
-				foreach (var item in Items)
-				{
-					var cssClass = "table-row";
-
-					switch (Items.IndexOf(item))
-					{
-						case var index when index == 0:
-							cssClass += " first";
-							break;
-						case var index when index == Items.Count - 1:
-							cssClass += " last";
-							break;
-					}
-
-					<tr @key="item.GetHashCode()" class="@cssClass" @onclick:stopPropagation="true" @onclick="(async () => await ItemClickedAsync(item))">
+				<Virtualize Items="Items" Context="item" ItemSize="@((float)89.175)">
+					<tr @key="item.GetHashCode()" class="table-row" @onclick:stopPropagation="true" @onclick="(async () => await OnClickedEventHandler(item))" @oncontextmenu="(async () => await OnContextMenuEventHandler(item))" @oncontextmenu:preventDefault="true">
 						@foreach (var column in columns)
 						{
-							<td class="@($"table-data column {column.AlignItems.ToString()?.ToLower()}".Trim())">
-								@column.GetCellValue(item)
-							</td>
+							<div class="table-cell column" style="width: @(column.Width ?? 100)%">
+								<div class="table-cell-header row">
+									<th>
+										@column.Header
+									</th>
+								</div>
+
+								<div class="table-cell-data row">
+									<td>
+										@column.GetCellValue(item)
+									</td>
+								</div>
+							</div>
 						}
 					</tr>
-				}
+				</Virtualize>
 			}
 		</tbody>
 	</table>
@@ -47,13 +45,21 @@
 	[Parameter]
 	public EventCallback ItemClicked { get; set; }
 
+	[Parameter]
+	public EventCallback ItemRightClicked { get; set; }
+
 	internal void AddTableRow(TableColumn<TItem> column)
 	{
 		columns.Add(column);
 	}
 
-	private async Task ItemClickedAsync(TItem item)
+	private async Task OnClickedEventHandler(TItem item)
 	{
 		await ItemClicked.InvokeAsync(item);
+	}
+
+	private async Task OnContextMenuEventHandler(TItem item)
+	{
+		await ItemRightClicked.InvokeAsync(item);
 	}
 }

@@ -14,7 +14,10 @@ public partial class TableColumn<TItem> : ComponentBase
 	public Table<TItem>? ParentTable { get; set; }
 
 	[Parameter]
-	public CSSAlignItems? AlignItems { get; set; }
+	public string? Header { get; set; }
+
+	[Parameter]
+	public int? Width { get; set; }
 
 	[Parameter, EditorRequired]
 	public Expression<Func<TItem, object>?>? Expression { get; set; }

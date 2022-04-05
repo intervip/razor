@@ -8,8 +8,8 @@ table {
 
 .table-rows {
 	display: table-row-group;
-	padding: 0 1.6rem;
-	overflow-y: auto;
+	padding: 0.8rem 1.6rem;
+	overflow-y: scroll;
 }
 
 .table-row {
@@ -31,25 +31,31 @@ table {
 		box-shadow: inset -6px -6px 16px -12px #0009;
 	}
 
-.table-data {
-	width: 100%;
+.table-cell {
 	flex-grow: 1;
+	width: 100%;
+}
+
+.table-cell-header {
+	padding: 0.1rem 0.6rem;
+}
+
+.table-cell-data {
+	padding: 0.1rem 0.6rem;
+}
+
+th {
+	padding: 0;
+	flex-grow: 1;
+	text-align: left;
 	user-select: none;
-	align-items: center;
+	font-size: 0.8rem;
+	font-weight: lighter;
 }
 
-.left {
-	align-items: flex-start;
-}
-
-.right {
-	align-items: flex-end;
-}
-
-.first {
-	margin: 1.6rem 0 0.4rem 0;
-}
-
-.last {
-	margin: 0.4rem 0 1.6rem 0;
+td {
+	padding: 0;
+	flex-grow: 1;
+	text-align: left;
+	user-select: none;
 }
