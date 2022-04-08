@@ -1,5 +1,5 @@
 ﻿<div class="button-container column@(Collapsed ?? false ? " collapsed" : "")">
-	<button @onclick:stopPropagation="true" @onclick="@(args => ButtonClickedEvent.InvokeAsync(args))" disabled="@Disabled" hidden="@Hidden">
+	<button type="button" @onclick:stopPropagation="true" @onclick="@(args => ButtonClickedEvent.InvokeAsync(args))" disabled="@Disabled" hidden="@Hidden">
 		@Text
 	</button>
 </div>
