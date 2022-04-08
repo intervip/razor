@@ -1,0 +1,23 @@
+﻿<div tabindex="0" class="page-container column" @onclick="OnClickEventHandler">
+	<div class="page-title row">
+		<h1>@Title</h1>
+	</div>
+
+	@ChildContent
+</div>
+
+@code {
+	[Parameter]
+	public EventCallback<MouseEventArgs> PageClickedEvent { get; set; }
+
+	[Parameter]
+	public RenderFragment? ChildContent { get; set; }
+
+	[Parameter]
+	public string? Title { get; set; }
+
+	internal async Task OnClickEventHandler(MouseEventArgs args)
+	{
+		await PageClickedEvent.InvokeAsync(args);
+	}
+}
