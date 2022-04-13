@@ -1,16 +1,18 @@
 ﻿@using Microsoft.AspNetCore.Components.Web.Virtualization
+
 @typeparam TItem
+@attribute [CascadingTypeParameter(nameof(TItem))]
 
 <CascadingValue IsFixed="true" Value="this">@ChildContent</CascadingValue>
 
 <div class="table-container column">
 	<table class="row">
 		<tbody class="table-rows" tabindex="-1">
-			@if (ChildContent is not null && Items?.Count > 0)
+			@if (ChildContent is not null && Items?.Count() > 0)
 			{
 				<Virtualize Items="Items" Context="item" ItemSize="@((float)89.175)">
-					<tr @key="item.GetHashCode()" class="table-row" @onclick:stopPropagation="true" @onclick="(async () => await OnClickedEventHandler(item))" @oncontextmenu="(async () => await OnContextMenuEventHandler(item))" @oncontextmenu:preventDefault="true">
-						@foreach (var column in columns)
+					<tr @key="item.GetHashCode()" class="table-row" @onclick:stopPropagation="true" @onclick="(_ => OnClickedEventHandler(item))" @oncontextmenu="(_ => OnContextMenuEventHandler(item))" @oncontextmenu:preventDefault="true">
+						<div class="table-row-checkbox" hidden="@checkBoxHidden">
 						{
 							<div class="table-cell column" style="width: @(column.Width ?? 100)%">
 								<div class="table-cell-header row">
@@ -19,7 +21,7 @@
 									</th>
 								</div>
 
-								<div class="table-cell-data row">
+						<CascadingValue Value="item" IsFixed="true">@ChildContent(item)</CascadingValue>
 									<td>
 										@column.GetCellValue(item)
 									</td>
@@ -34,13 +36,14 @@
 </div>
 
 @code {
-	private List<TableColumn<TItem>> columns = new List<TableColumn<TItem>>();
+	private List<TItem> selectedItems = new();
+	private bool checkBoxHidden = true;
 
 	[Parameter]
-	public RenderFragment? ChildContent { get; set; }
+	public RenderFragment<TItem>? ChildContent { get; set; }
 
 	[Parameter]
-	public IList<TItem>? Items { get; set; }
+	public ICollection<TItem>? Items { get; set; }
 
 	[Parameter]
 	public EventCallback ItemClicked { get; set; }
