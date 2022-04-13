@@ -1,0 +1,28 @@
+﻿@typeparam TItem
+
+<div class="table-cell column" style="width: @(Width ?? 100)%">
+	<th>
+		@Header
+	</th>
+
+	<td>
+		@if (ChildContent is not null)
+		{
+			@ChildContent(Item)
+		}
+	</td>
+</div>
+
+@code {
+	[CascadingParameter]
+	public TItem Item { get; set; } = default(TItem)!;
+
+	[Parameter]
+	public string? Header { get; set; }
+
+	[Parameter]
+	public int? Width { get; set; }
+
+	[Parameter, EditorRequired]
+	public RenderFragment<TItem>? ChildContent { get; set; }
+}
