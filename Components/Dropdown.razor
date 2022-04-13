@@ -1,40 +1,41 @@
-﻿@using System.Linq.Expressions
+﻿@using System.Diagnostics.CodeAnalysis
+@using System.Reflection
 @typeparam TItem
 
-<div tabindex="0" class="dropdown-container column" @onfocusout="DropdownFocusOutEventHandler">
+<div tabindex="0" class="dropdown-container column" @onfocusout="@(_ => hidden = true)">
 	<div class="dropdown-label row">
 		<label>@Label</label>
 	</div>
-
-	<div class="dropdown-button row" @onclick="DropdownButtonClickedEventHandler">
-		@if (Value is not null && compiledExpression(Value) is object compiledValue)
-		{
-			var placeHolder = compiledValue.ToString();
-
-			if (string.IsNullOrEmpty(placeHolder) is not true)
+	
+	@if (ChildContent is not null)
+	{
+		<div class="dropdown-button row" @onclick="@(_ => hidden = !hidden)">
+			@if (string.IsNullOrEmpty(propertyValue?.ToString()))
 			{
-				<p>@placeHolder</p>
+				<p class="placeholder">@Placeholder</p>
 			}
 
 			else
 			{
-				<p class="placeholder">@Placeholder</p>
-			}
-		}
-	</div>
-
-	<div class="dropdown row" hidden="@hidden">
-		<div class="dropdown-items column">
-			@foreach (var item in Items ?? Enumerable.Empty<TItem>())
-			{
-				<div @key="item.GetHashCode()" class="dropdown-item row" @onclick="@(async () => await DropdownItemClickedEventHandler(item))">@compiledExpression(item)</div>
+				<p>@ChildContent(Value!)</p>
 			}
 		</div>
-	</div>
+
+		<div class="dropdown row" hidden="@hidden">
+			<div class="dropdown-items column">
+				@foreach (var item in Items ?? Enumerable.Empty<TItem>())
+				{
+					<div @key="item.GetHashCode()" class="dropdown-item row" @onclick="@(_ => DropdownItemOnClickEventHandler(item))">
+						@ChildContent(item)
+					</div>
+				}
+			</div>
+		</div>
+	}
 </div>
 
 @code {
-	private Func<TItem, object> compiledExpression = null!;
+	private object? propertyValue;
 	private bool hidden = true;
 
 	[Parameter]
@@ -46,36 +47,27 @@
 	[Parameter]
 	public TItem? Value { get; set; }
 
-	[Parameter]
+	[Parameter, AllowNull]
 	public IEnumerable<TItem>? Items { get; set; }
+
+	[Parameter, EditorRequired]
+	public RenderFragment<TItem>? ChildContent { get; set; }
+
+	[Parameter]
+	public string? PropertyName { get; set; }
 
 	[Parameter]
 	public EventCallback<TItem> ValueChanged { get; set; }
 
-	[Parameter, EditorRequired]
-	public Expression<Func<TItem, object>>? Expression { get; set; }
-
-	protected override void OnParametersSet()
+	protected override void OnInitialized()
 	{
-		ArgumentNullException.ThrowIfNull(Expression);
-		compiledExpression = Expression.Compile();
-		base.OnParametersSet();
+		propertyValue = Value?.GetType().GetProperty(PropertyName ?? string.Empty)?.GetValue(Value, null);
+		base.OnInitialized();
 	}
 
-	private void DropdownButtonClickedEventHandler()
-	{
-		hidden = !hidden;
-	}
-
-	private void DropdownFocusOutEventHandler()
-	{
-		hidden = true;
-	}
-
-	private async Task DropdownItemClickedEventHandler(TItem item)
+	private async Task DropdownItemOnClickEventHandler(TItem item)
 	{
 		hidden = true;
 		await ValueChanged.InvokeAsync(item);
-		Placeholder = compiledExpression(item).ToString();
 	}
 }
