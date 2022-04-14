@@ -31,9 +31,8 @@ table {
 		box-shadow: inset -6px -6px 16px -12px #0009;
 	}
 
-.table-cell {
-	flex-grow: 1;
-	width: 100%;
+.table-row-checkbox {
+	align-items: center;
 }
 
 input {
