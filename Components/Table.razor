@@ -3,31 +3,23 @@
 @typeparam TItem
 @attribute [CascadingTypeParameter(nameof(TItem))]
 
-<CascadingValue IsFixed="true" Value="this">@ChildContent</CascadingValue>
-
 <div class="table-container column">
 	<table class="row">
 		<tbody class="table-rows" tabindex="-1">
 			@if (ChildContent is not null && Items?.Count() > 0)
 			{
 				<Virtualize Items="Items" Context="item" ItemSize="@((float)89.175)">
-					<tr @key="item.GetHashCode()" class="table-row" @onclick:stopPropagation="true" @onclick="(_ => OnClickedEventHandler(item))" @oncontextmenu="(_ => OnContextMenuEventHandler(item))" @oncontextmenu:preventDefault="true">
+					<tr class="table-row" 
+					@key="item.GetHashCode()" 
+					@onclick:stopPropagation="true"
+					@onclick="(_ => OnClickedEventHandler(item))"
+					@oncontextmenu="(_ => OnContextMenuEventHandler(item))"
+					@oncontextmenu:preventDefault="true">
 						<div class="table-row-checkbox" hidden="@checkBoxHidden">
-						{
-							<div class="table-cell column" style="width: @(column.Width ?? 100)%">
-								<div class="table-cell-header row">
-									<th>
-										@column.Header
-									</th>
-								</div>
+							<input type="checkbox" checked="@(SelectedItems?.Contains(item))">
+						</div>
 
 						<CascadingValue Value="item" IsFixed="true">@ChildContent(item)</CascadingValue>
-									<td>
-										@column.GetCellValue(item)
-									</td>
-								</div>
-							</div>
-						}
 					</tr>
 				</Virtualize>
 			}
@@ -36,7 +28,6 @@
 </div>
 
 @code {
-	private List<TItem> selectedItems = new();
 	private bool checkBoxHidden = true;
 
 	[Parameter]
@@ -46,23 +37,65 @@
 	public ICollection<TItem>? Items { get; set; }
 
 	[Parameter]
-	public EventCallback ItemClicked { get; set; }
+	public EventCallback<TItem> ItemClickedEvent { get; set; }
 
 	[Parameter]
-	public EventCallback ItemRightClicked { get; set; }
+	public EventCallback<SelectionChangedEventArgs<TItem>> SelectionChangedEvent { get; set; }
 
-	internal void AddTableRow(TableColumn<TItem> column)
+	[Parameter]
+	public EventCallback<TItem> ItemRightClickedEvent { get; set; }
+
+	[Parameter]
+	public ICollection<TItem>? SelectedItems { get; set; }
+
+	[Parameter]
+	public SelectionMode? SelectionMode { get; set; }
+
+	protected override void OnParametersSet()
 	{
-		columns.Add(column);
+		if (SelectionMode != Components.SelectionMode.Multiple)
+		{
+			checkBoxHidden = true;
+		}
+
+		base.OnParametersSet();
 	}
 
 	private async Task OnClickedEventHandler(TItem item)
 	{
-		await ItemClicked.InvokeAsync(item);
+		if (SelectionMode != Components.SelectionMode.None)
+		{
+			if (SelectionMode == Components.SelectionMode.Multiple)
+			{
+				SelectionChangedEventArgs<TItem> args;
+				checkBoxHidden = false;
+
+				if (SelectedItems?.Contains(item) ?? false)
+				{
+					SelectedItems.Remove(item);
+					args = new() { RemovedItem = item };
+
+					if (SelectedItems.Count is 0)
+					{
+						checkBoxHidden = true;
+					}
+				}
+
+				else
+				{
+					SelectedItems?.Add(item);
+					args = new() { AddedItem = item };
+				}
+
+				await SelectionChangedEvent.InvokeAsync(args);
+			}
+
+			else await ItemClickedEvent.InvokeAsync(item);
+		}
 	}
 
-	private async Task OnContextMenuEventHandler(TItem item)
+	private Task OnContextMenuEventHandler(TItem item)
 	{
-		await ItemRightClicked.InvokeAsync(item);
+		return ItemRightClickedEvent.InvokeAsync(item);
 	}
 }
