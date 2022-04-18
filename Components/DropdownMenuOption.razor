@@ -1,0 +1,16 @@
+﻿<div class="dropdownmenuoption-container row" @onclick="OnClickEventHandler">
+	@ChildContent
+</div>
+
+@code {
+	[Parameter]
+	public RenderFragment? ChildContent { get; set; }
+
+	[Parameter]
+	public EventCallback ItemClickedEvent { get; set; }
+
+	private Task OnClickEventHandler()
+	{
+		return ItemClickedEvent.InvokeAsync();
+	}
+}

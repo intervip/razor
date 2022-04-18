@@ -1,0 +1,16 @@
+﻿.dropdownmenuoption-container {
+	margin: 0.3rem;
+	padding: 0 0.6rem;
+	user-select: none;
+	min-height: 1.8rem;
+	align-items: center;
+	border-radius: 0.4rem;
+}
+
+	.dropdownmenuoption-container:hover {
+		background-color: #fff7;
+	}
+
+	.dropdownmenuoption-container:active {
+		background-color: #fff9;
+	}

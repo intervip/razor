@@ -1,0 +1,28 @@
+﻿<div tabindex="0" @onfocusout="OnFocusOutEventHandler" class="dropdownmenu-container column" hidden="@Hidden" style="@($"left: {PageX}px; top: {PageY}px;")">
+	@ChildContent
+</div>
+
+@code {
+	[Parameter]
+	public RenderFragment? ChildContent { get; set; }
+
+	[Parameter]
+	public double PageX { get; set; }
+
+	[Parameter]
+	public double PageY { get; set; }
+
+	[Parameter]
+	public bool? Hidden { get; set; }
+
+
+	public void CloseMenu()
+	{
+		OnFocusOutEventHandler();
+	}
+
+	private void OnFocusOutEventHandler()
+	{
+		Hidden = true;
+	}
+}
