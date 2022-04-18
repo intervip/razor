@@ -1,0 +1,8 @@
+﻿.dropdownmenu-container {
+	z-index: 1;
+	position: fixed;
+	border-radius: 0.4rem;
+	background-color: #fff7;
+	backdrop-filter: blur(0.6rem);
+	box-shadow: 6px 6px 16px -8px #0009;
+}
