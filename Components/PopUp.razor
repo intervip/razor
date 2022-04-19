@@ -1,0 +1,31 @@
+﻿<div class="popup-fadeout-container" hidden="@Hidden">
+	<div class="popup-container">
+		<div class="popup">
+			<div class="popup-header row">
+				<p>@Header</p>
+			</div>
+
+			<div class="popup-content row">
+				@Content
+			</div>
+
+			<div class="popup-buttons row">
+				@Buttons
+			</div>
+		</div>
+	</div>
+</div>
+
+@code {
+	[Parameter]
+	public bool? Hidden { get; set; }
+
+	[Parameter]
+	public string? Header { get; set; }
+
+	[Parameter]
+	public RenderFragment? Content { get; set; }
+
+	[Parameter]
+	public RenderFragment? Buttons { get; set; }
+}
