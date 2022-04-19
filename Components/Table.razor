@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using System.ComponentModel
 
 @typeparam TItem
 @attribute [CascadingTypeParameter(nameof(TItem))]
@@ -13,7 +14,7 @@
 					@key="item.GetHashCode()" 
 					@onclick:stopPropagation="true"
 					@onclick="(_ => OnClickedEventHandler(item))"
-					@oncontextmenu="(_ => OnContextMenuEventHandler(item))"
+					@oncontextmenu="(e => OnContextMenuEventHandler(e, item))"
 					@oncontextmenu:preventDefault="true">
 						<div class="table-row-checkbox" hidden="@checkBoxHidden">
 							<input type="checkbox" checked="@(SelectedItems?.Contains(item))">
@@ -30,6 +31,8 @@
 @code {
 	private bool checkBoxHidden = true;
 
+	public BindingList<TItem> SelectedItems { get; init; } = new();
+
 	[Parameter]
 	public RenderFragment<TItem>? ChildContent { get; set; }
 
@@ -43,29 +46,26 @@
 	public EventCallback<SelectionChangedEventArgs<TItem>> SelectionChangedEvent { get; set; }
 
 	[Parameter]
-	public EventCallback<TItem> ItemRightClickedEvent { get; set; }
-
-	[Parameter]
-	public ICollection<TItem>? SelectedItems { get; set; }
+	public EventCallback<ItemClickedEventArgs<TItem>> ItemRightClickedEvent { get; set; }
 
 	[Parameter]
 	public SelectionMode? SelectionMode { get; set; }
 
-	protected override void OnParametersSet()
+	protected override void OnInitialized()
 	{
-		if (SelectionMode != Components.SelectionMode.Multiple)
+		SelectedItems.ListChanged += (_, _) =>
 		{
-			checkBoxHidden = true;
-		}
-
-		base.OnParametersSet();
+			if (SelectedItems.Count is 0) checkBoxHidden = true;
+			else checkBoxHidden = false;
+		};
+		base.OnInitialized();
 	}
 
 	private async Task OnClickedEventHandler(TItem item)
 	{
 		if (SelectionMode != Components.SelectionMode.None)
 		{
-			if (SelectionMode == Components.SelectionMode.Multiple)
+			if (SelectionMode == Components.SelectionMode.Multiple || SelectedItems.Count > 0)
 			{
 				SelectionChangedEventArgs<TItem> args;
 				checkBoxHidden = false;
@@ -94,8 +94,12 @@
 		}
 	}
 
-	private Task OnContextMenuEventHandler(TItem item)
+	private Task OnContextMenuEventHandler(MouseEventArgs args, TItem item)
 	{
-		return ItemRightClickedEvent.InvokeAsync(item);
+		var rightClickedEventArgs = new ItemClickedEventArgs<TItem>(args)
+		{
+			Item = item
+		};
+		return ItemRightClickedEvent.InvokeAsync(rightClickedEventArgs);
 	}
 }

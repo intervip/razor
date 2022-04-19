@@ -1,5 +1,6 @@
 ﻿.button-container {
 	flex-grow: 1;
+	max-width: 8rem;
 }
 
 .collapsed {

@@ -10,7 +10,7 @@
 	@if (ChildContent is not null)
 	{
 		<div class="dropdown-button row" @onclick="@(_ => hidden = !hidden)">
-			@if (string.IsNullOrEmpty(propertyValue?.ToString()))
+			@if (string.IsNullOrEmpty(Value?.GetType().GetProperty(PropertyName ?? string.Empty)?.GetValue(Value, null)?.ToString()))
 			{
 				<p class="placeholder">@Placeholder</p>
 			}
@@ -35,7 +35,6 @@
 </div>
 
 @code {
-	private object? propertyValue;
 	private bool hidden = true;
 
 	[Parameter]
@@ -59,15 +58,9 @@
 	[Parameter]
 	public EventCallback<TItem> ValueChanged { get; set; }
 
-	protected override void OnInitialized()
-	{
-		propertyValue = Value?.GetType().GetProperty(PropertyName ?? string.Empty)?.GetValue(Value, null);
-		base.OnInitialized();
-	}
-
-	private async Task DropdownItemOnClickEventHandler(TItem item)
+	private Task DropdownItemOnClickEventHandler(TItem item)
 	{
 		hidden = true;
-		await ValueChanged.InvokeAsync(item);
+		return ValueChanged.InvokeAsync(item);
 	}
 }
