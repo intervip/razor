@@ -2,6 +2,12 @@
 	flex-grow: 1;
 }
 
+.table-buttons {
+	flex-grow: unset;
+	padding: 0 1.6rem;
+	align-self: flex-end;
+}
+
 table {
 	height: 0;
 }
